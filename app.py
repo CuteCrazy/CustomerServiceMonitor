@@ -22,7 +22,7 @@ app = Flask(__name__)
 # Channel Access Token
 line_bot_api = LineBotApi('Nh5I28S6YL+XEr3hWPH/hOicu19TCl2YDjjMXommX2bWtyNhi4MxJFlBItNK3KlRjjSaeSklwBQuImKlVTbNRoYUhao7Svrwi1qrI27pbSe+laziGnX+8eSwJhkOsdSPxF3tIpOacgQsvlbaVsadngdB04t89/1O/w1cDnyilFU=')
 # Channel Secret
-handler = WebhookHandler('de46c69f7104b79f5c8ccd854b20d801')
+handler = WebhookHandler('1c1ed7ad18b8bbc1b0c0c34aa0a0fdcc')
 
 
 # 建立MySQL連線
