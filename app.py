@@ -102,6 +102,7 @@ def handle_message(event):
         line_bot_api = MessagingApi(api_client)
 
         userMessage = event.message.text
+        print(f"user Message: {userMessage}")
 
         userId = event.source.user_id
         print(f"User ID: {userId}")
@@ -126,6 +127,8 @@ def handle_message(event):
         )
         
         gptResponse = completion.choices[0].message.content
+        print(f"GPT Response: {gptResponse}")
+
         if gptResponse.__contains__("緊急警報"):
             _pirority = 0
         elif gptResponse.__contains__("重要警告"):
@@ -134,12 +137,14 @@ def handle_message(event):
             _pirority = 2
         elif gptResponse.__contains__("提示警告"):
             _pirority = 3
-        
+        print(f"GPT Response match pirority: {_pirority}")
+
         sql = "INSERT INTO wiselog (msg_key, pirority, company, report_user_name, product, msg_log, msg_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
         val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, time.strftime('%Y%m%d%H%M%S'))
         dbCursor.execute(sql, val)
         dbConn.commit()
 
+        print(f"-- End --")
 
         # if msg == "pincode":
         #     pin = get_pin_code()
