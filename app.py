@@ -53,28 +53,6 @@ dbCursor = dbConn.cursor()
 openAIClient = OpenAI(api_key="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")
 
 
-def get_google_gif():
-    request = requests.get("https://www.google.com/")
-    soup = BeautifulSoup(request.text, "lxml")
-
-    #  class前面加上. ; id前面加上#
-    for item in soup.select('{}'.format("#hplogo")):
-        print(item.get_text)
-
-def get_pin_code():
-    poe_url = 'https://poedb.tw/tw/chinese'
-    res = requests.get(poe_url, timeout=30)
-
-    soup = BeautifulSoup(res.text, 'lxml')
-    class_Info = soup.find_all(attrs={"class": "panel-body"})
-
-    pin_infos = class_Info[0]
-    pin_info = pin_infos.contents[0].contents[0].contents[0]
-
-    # print(pin_info)
-    return pin_info
-
-
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -139,10 +117,13 @@ def handle_message(event):
             _pirority = 3
         print(f"GPT Response match pirority: {_pirority}")
 
-        sql = "INSERT INTO wiselog (msg_key, pirority, company, report_user_name, product, msg_log, msg_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, time.strftime('%Y%m%d%H%M%S'))
-        dbCursor.execute(sql, val)
-        dbConn.commit()
+        try:
+            sql = "INSERT INTO wiselog (msg_key, pirority, company, report_user_name, product, msg_log, msg_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, time.strftime('%Y%m%d%H%M%S'))
+            dbCursor.execute(sql, val)
+            dbConn.commit()
+        except Exception as e:
+            print(f"Insert SQL Fail... {e}")
 
         print(f"-- End --")
 
