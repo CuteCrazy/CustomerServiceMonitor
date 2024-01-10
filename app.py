@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import os
 import time
+import pytz
 from flask import Flask, request, abort
 
 import uuid
@@ -121,9 +122,15 @@ def handle_message(event):
             _pirority = 4
         print(f"GPT Response match pirority: {_pirority}")
 
+        #create Taipei timezone
+        tz_Taipei = pytz.timezone('Asia/Taipei')
+
+        # Get the current time in London
+        datetime_Taipei = datetime.now(tz_Taipei)
+
         try:
             sql = "INSERT INTO wiselog (msg_key, pirority, company, report_user_name, product, msg_log, msg_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, datetime.datetime.now().strftime('%Y%m%d%H%M%S') + "000")
+            val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, datetime_Taipei.strftime('%Y%m%d%H%M%S') + "000")
             dbCursor.execute(sql, val)
             dbConn.commit()
         except Exception as e:
