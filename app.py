@@ -128,6 +128,14 @@ def handle_message(event):
         except Exception as e:
             print(f"Insert SQL Fail... {e}")
 
+        replyMsg = f"{userMessage} -> {gptResponse}"
+        line_bot_api.reply_message_with_http_info(
+            ReplyMessageRequest(
+                reply_token=event.reply_token,
+                messages=[TextMessage(text=replyMsg)]
+            )
+        )
+
         print(f"-- End --")
 
         # if msg == "pincode":
@@ -146,12 +154,7 @@ def handle_message(event):
 
         #     # line_bot_api.push_message(crazyID, TextSendMessage(text="2020/03/27 11:48:37 RichTV BLUR"))
         
-        # line_bot_api.reply_message_with_http_info(
-        #     ReplyMessageRequest(
-        #         reply_token=event.reply_token,
-        #         messages=[TextMessage(text=event.message.text)]
-        #     )
-        # )
+        
 
 
 if __name__ == "__main__":
