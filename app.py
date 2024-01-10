@@ -92,14 +92,15 @@ def handle_message(event):
         _pirority = -1
 
         completion = openAIClient.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=[
-                {"role": "system", "content": "我把告警分成四類\r\n" +
-                                    "緊急警報：告警規則對應資源發生緊急故障，影響業務視為緊急警報。\r\n" +
-                                    "重要警告：警報規則對應資源有影響業務的問題，此問題相對較嚴重，有可能阻礙資源的正常使用。\r\n" +
-                                    "次要警告：警告規則對應資源有相對較不嚴重點問題，此問題不會阻礙資源的正常使用。\r\n" +
-                                    "提示警告：告警規則對應資源有潛在的錯誤可能影響到業務。\r\n" +
-                                    "接下來會給你告警分類，只需要給我分類標籤，不需要解釋。"},
+                {"role": "system", "content": "I classify customer feedback into five categories:\r\n" +
+                                    "Urgent and Critical:This is the highest priority issue that requires immediate action. It may include system crashes, security vulnerabilities, significant data loss, etc. These issues could lead to severe damage to the customer's business and reputation.\r\n" +
+                                    "Urgent but Less Critical:While not as severe as the first category, these issues still require prompt resolution. Examples include certain features not working properly, system slowdowns, anomalies in dashboard reports, etc.\r\n" +
+                                    "Critical but Less Urgent:Issues in this category may have some impact on the business but don't require immediate attention. This could involve improvements to important features, enhancing security, performance optimization, etc. These can be addressed in future version updates or planned cycles.\r\n" +
+                                    "General Issues:These problems have a relatively minor impact on the business and can be resolved within the normal support cycle. This includes general usage issues, feature inquiries, operational guidance, etc.\r\n" +
+                                    "Non-Urgent and Non-Critical:This is the lowest priority level, and these issues can be addressed at an appropriate time. This may include chit-chat, suggestions, improvement feedback, or additional features that are not time-sensitive.\r\n" +
+                                    "Next, I will provide customer feedback. Just give me the classification labels, no need to explain."},
                 {"role": "user", "content": userMessage}
             ]
         )
@@ -107,14 +108,16 @@ def handle_message(event):
         gptResponse = completion.choices[0].message.content
         print(f"GPT Response: {gptResponse}")
 
-        if gptResponse.__contains__("緊急警報"):
+        if gptResponse.__contains__("Urgent and Critical"):
             _pirority = 0
-        elif gptResponse.__contains__("重要警告"):
+        elif gptResponse.__contains__("Urgent but Less Critical"):
             _pirority = 1
-        elif gptResponse.__contains__("次要警告"):
+        elif gptResponse.__contains__("Critical but Less Urgent"):
             _pirority = 2
-        elif gptResponse.__contains__("提示警告"):
+        elif gptResponse.__contains__("General Issues"):
             _pirority = 3
+        elif gptResponse.__contains__("Non-Urgent and Non-Critical"):
+            _pirority = 4
         print(f"GPT Response match pirority: {_pirority}")
 
         try:
