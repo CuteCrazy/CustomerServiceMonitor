@@ -122,7 +122,7 @@ def handle_message(event):
 
         try:
             sql = "INSERT INTO wiselog (msg_key, pirority, company, report_user_name, product, msg_log, msg_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, time.strftime('%Y%m%d%H%M%S'))
+            val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, time.strftime('%Y%m%d%H%M%S%f'))
             dbCursor.execute(sql, val)
             dbConn.commit()
         except Exception as e:
