@@ -122,13 +122,13 @@ def handle_message(event):
 
         try:
             sql = "INSERT INTO wiselog (msg_key, pirority, company, report_user_name, product, msg_log, msg_time) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, time.strftime('%Y%m%d%H%M%S%f'))
+            val = (str(uuid.uuid4()), _pirority, "", userName, "", userMessage, time.strftime('%Y%m%d%H%M%S') + "000")
             dbCursor.execute(sql, val)
             dbConn.commit()
         except Exception as e:
             print(f"Insert SQL Fail... {e}")
 
-        replyMsg = f"{userMessage} -> {gptResponse}"
+        replyMsg = f"{userMessage} -> {_pirority} - {gptResponse}"
         line_bot_api.reply_message_with_http_info(
             ReplyMessageRequest(
                 reply_token=event.reply_token,
